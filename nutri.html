@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nutri Planet</title>
+  <link rel="icon" href="img/NP-logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="nutri.css" />
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <img src="img/NP-logo-text.png">
+      </div>
+      <div class="menu-toggle">☰</div>
+      <ul class="nav-links">
+        <li><a href="#">Início</a></li>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="#">Contato</a></li>
+        <li><a href="#" class="active">Canal de Denúncias</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="header">
+    <div class="header-content">
+      <h1 style="font-family: Coco;">Canal de Denúncias</h1>
+      <p>Este espaço é totalmente seguro e confidencial. Utilize-o para relatar qualquer situação que possa violar princípios éticos, legais ou de segurança.</p>
+    </div>
+  </header>
+
+  <section class="form-section">
+    <div class="form-card">
+
+      <h2 style="font-family: Coco;">Envie sua denúncia</h2>
+
+      <form>
+
+        <label>Tipo de denúncia</label>
+        <div class="custom-select" data-placeholder="Selecione..." data-name="tipo_denuncia">
+          <div class="selected">Selecione...</div>
+          <ul class="options">
+            <li data-value="Assédio">Assédio</li>
+            <li data-value="Corrupção">Corrupção</li>
+            <li data-value="Comportamento inadequado">Comportamento inadequado</li>
+            <li data-value="Risco à saúde ou segurança">Risco à saúde ou segurança</li>
+            <li data-value="Outro">Outro</li>
+          </ul>
+        </div>
+
+        <label>Descrição</label>
+        <textarea placeholder="Descreva o ocorrido com detalhes..." required></textarea>
+
+        <label>Você deseja se identificar?</label>
+        <div class="custom-select" data-placeholder="Selecione..." data-name="identificacao" id="select-identificacao">
+          <div class="selected">Selecione...</div>
+          <ul class="options">
+            <li data-value="Sim">Sim</li>
+            <li data-value="Não">Não</li>
+          </ul>
+        </div>
+
+        <label id="label-contato">Contato (opcional)</label>
+        <input type="text" id="input-contato" placeholder="Email ou telefone">
+
+        <button type="submit" class="btn-enviar">Enviar denúncia</button>
+
+      </form>
+
+    </div>
+  </section>
+
+  <script>
+    const menuBtn = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+    });
+
+    document.querySelectorAll('.custom-select').forEach(select => {
+      const selected = select.querySelector('.selected');
+      const options = select.querySelector('.options');
+      const items = select.querySelectorAll('.options li');
+      const hiddenInput = document.createElement('input');
+
+      hiddenInput.type = "hidden";
+      hiddenInput.name = select.dataset.name;
+      select.appendChild(hiddenInput);
+
+      selected.addEventListener('click', () => {
+        select.classList.toggle('open');
+      });
+
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          selected.textContent = item.textContent;
+          hiddenInput.value = item.dataset.value;
+          select.classList.remove('open');
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!select.contains(e.target)) {
+          select.classList.remove('open');
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const identificacaoSelect = document.getElementById("select-identificacao");
+      const labelContato = document.getElementById("label-contato");
+      const inputContato = document.getElementById("input-contato");
+      const hiddenIdentInput = identificacaoSelect.querySelector("input[type='hidden']");
+
+      const observer = new MutationObserver(() => {
+        if (hiddenIdentInput.value === "Sim") {
+          labelContato.style.display = "block";
+          inputContato.style.display = "block";
+        } else {
+          labelContato.style.display = "none";
+          inputContato.style.display = "none";
+          inputContato.value = "";
+        }
+      });
+
+      observer.observe(hiddenIdentInput, {
+        attributes: true,
+        attributeFilter: ["value"]
+      });
+    });
+  </script>
+
+</body>
+</html>
